@@ -19,7 +19,7 @@ import java.util.Map;
 
 public class TopVoters extends AppCompatActivity {
 
-    private ListView mTopViewersList;
+    HashMap<String, Integer> map = new HashMap<String, Integer>();
     private FirebaseFirestore db = FirebaseFirestore.getInstance();
     private CollectionReference notebookRef = db.collection("userinfo");
     @Override
@@ -27,11 +27,10 @@ public class TopVoters extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_top_voters);
 
-        mTopViewersList = (ListView) findViewById(R.id.top_viewers_list);
-        HashMap<String, Integer> map = new HashMap<String, Integer>();
-        map.put("a", 4);    //DEMO
-        map.put("c", 6);
-        map.put("b", 2);
+
+        map.put("anik", 4);    //DEMO
+        map.put("chomok", 6);
+        map.put("tonmoy", 2);
 
         notebookRef.get()
                 .addOnSuccessListener(new OnSuccessListener<QuerySnapshot>() {
@@ -47,7 +46,7 @@ public class TopVoters extends AppCompatActivity {
                             int givevote = note.getGiveVote();
 
                             Toast.makeText(TopVoters.this, username+" "+ uid+"  "+givevote, Toast.LENGTH_SHORT).show();
-
+                            map.put(username, givevote);
                         }
 
                     }
@@ -62,9 +61,9 @@ public class TopVoters extends AppCompatActivity {
         });
 
         for (Object e : a) {
+            String person = ((Map.Entry<String, Integer>) e).getKey()  + " ";
+            String result =  ((Map.Entry<String, Integer>) e).getValue() + "";
 
-            //System.out.println(((Map.Entry<String, Integer>) e).getKey() + " : "
-            //        + ((Map.Entry<String, Integer>) e).getValue());
 
 
         }

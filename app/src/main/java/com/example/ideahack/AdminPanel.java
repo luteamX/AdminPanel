@@ -6,6 +6,7 @@ import androidx.appcompat.widget.Toolbar;
 import androidx.cardview.widget.CardView;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.nfc.Tag;
 import android.os.Bundle;
 import android.util.Log;
@@ -52,11 +53,16 @@ public class AdminPanel extends AppCompatActivity implements View.OnClickListene
 
     int TotalUser = 0; //map.size();
     int TotalSubmitPost = 0;
+    int Collom1,Collom2,Collom3,Collom4,Collom5;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_panel);
 
+        SharedPreferences sharedPreferences = getSharedPreferences("Graph",MODE_PRIVATE);
+        Collom1 = sharedPreferences.getInt("TotalUser",0);
+        Collom2 =  sharedPreferences.getInt("TotalSubmitPost",0);
+        ///////////////Shared Input Finish////////////////
         mButton4 = (LinearLayout)findViewById(R.id.button4);
         mButton4.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -77,7 +83,7 @@ public class AdminPanel extends AppCompatActivity implements View.OnClickListene
 
         barChart.setDrawBarShadow(false);
         barChart.setDrawValueAboveBar(true);
-        barChart.setMaxVisibleValueCount(100);
+        barChart.setMaxVisibleValueCount(10);
         barChart.setPinchZoom(false);
         barChart.setDrawGridBackground(false);
 
@@ -89,11 +95,11 @@ public class AdminPanel extends AppCompatActivity implements View.OnClickListene
 
         ArrayList<BarEntry> barEntries = new ArrayList<>();
 
-        barEntries.add(new BarEntry(1,TotalUser));
-        barEntries.add(new BarEntry(2, totalpostsize));
-        barEntries.add(new BarEntry(3, 10f));
-        barEntries.add(new BarEntry(4, 40f));
-        barEntries.add(new BarEntry(5, 40f));
+        barEntries.add(new BarEntry(1,Collom1));
+        barEntries.add(new BarEntry(2, Collom2));
+        barEntries.add(new BarEntry(3, 1));
+        barEntries.add(new BarEntry(4, 4));
+        barEntries.add(new BarEntry(5, 3));
 
         BarDataSet barDataSet = new BarDataSet(barEntries, "Summury");
         barDataSet.setColors(ColorTemplate.COLORFUL_COLORS);
@@ -133,8 +139,17 @@ public class AdminPanel extends AppCompatActivity implements View.OnClickListene
                             int givevote = note.getGiveVote();
                             int submit = note.getSubmit();          TotalSubmitPost = TotalSubmitPost + submit;
                             Toast.makeText(AdminPanel.this, "UID "+" "+ uid+"  Vote "+submit, Toast.LENGTH_SHORT).show();
+
                             textUser.setText(TotalUser+"");
                             totalposttext.setText(TotalSubmitPost+"");
+
+                            SharedPreferences sharedPreferences = getSharedPreferences("Graph",MODE_PRIVATE);
+                            SharedPreferences.Editor editor = sharedPreferences.edit();
+
+                            editor.putInt("TotalUser",TotalUser);
+                            editor.putInt("TotalSubmitPost",TotalSubmitPost);
+
+                            editor.commit();
 
                         }
 
